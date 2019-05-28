@@ -92,4 +92,3 @@ router.start({
 router.redirect({
 	'*':'/bill-pays'
 });
-

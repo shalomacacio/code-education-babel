@@ -1,87 +1,68 @@
+const names = ['Conta de Luz','Conta de água','Conta de Internet','Conta de telefone','Conta de Condominio','Gasolina','Refeição','Supermercado'];
+
 window.billPayCreateComponent = Vue.extend({
-	template:
-	`
-	<!-- @submit é a abreviação de v-on:submit-->
-	<form name="form" @submit.prevent="submit" :form-type="formType">
-	<label>Vencimento</label>
-	<input type="text" v-model="bill.date_due">
-	<br/><br/>
-	<label>Nome</label>
-	<select v-model="bill.name">
-	<!-- :value é a abreviação de v-bind:value-->
-	<!-- value deixa de ser apnena propriedad do DOM e passa a ser uma propriedade de ligação-->
-	<option v-for="o in names" :value="o">{{o}}</option>
-	</select>
-	<br/><br/>
-	<label>Valor</label>
-	<input type="text" v-model="bill.value">
-	<br/><br/>
-	<label>Paga?</label>
-	<input type="checkbox" v-model="bill.done">
+	template: `
+		<form name="form" @submit.prevent="submit">
+			<label>Vencimento:</label>
+			<input type="text" v-model="bill.date_due">
+			<br><br>
 
+			<label>Nome:</label>
+			<select v-model="bill.name">
+				<option v-for="name in names" :value=" name">{{ name }}</option>
+			</select>
+			<br><br>
 
-	<input type="submit" value="Enviar">
+			<label>Valor:</label>
+			<input type="text" v-model="bill.value">
+			<br><br>
+			
+			<label>Pago?</label>
+			<input type="checkbox" v-model="bill.done">
+			<br><br>
 
-	</form>
+			<input type="submit" value="Enviar">
+		</form>
 	`,
-		http: {
-		root:'http://localhost:8000/api'
-	},
-
-	data: function(){
+	data: function() {
 		return {
-			formType:"insert",
-			names: [
-			'Luz',
-			'agua',
-			'telefone',
-			'supermercado',
-			'cartao',
-			'emprestimo',
-			'gasolina'
-			],
-			//limpar os dados form
-			bill:{date_due:'', name:'', value: 0, done:0}
-		};
-	},
-
-	created: function(){
-		var self = this;
-		if(this.$route.name == 'bill.update'){
-			self.formType = 'update';
-			self.getBill(this.$route.params.id)
+			formType: 'insert',
+			names: names,
+			
+	        bill: {
+	            date_due: '',
+	            name: '',
+	            value: 0,
+	            done: false
+	        }
 		}
 	},
-
+	created: function() {
+		if(this.$route.name == 'bill-pay.update') {
+			this.formType = 'update';
+			this.getBill(this.$route.params.id);
+		}
+	},
 	methods: {
-
-		submit: function(){
-			var self = this;
-			if(self.formType =="insert"){
-				Bill.save({}, this.bill).then(function(response){
-					self.$dispatch('change-info');
-					self.$router.go({name: 'bill-pay.list'});
-				})
-			}else{
-				Bill.update({id: this.bill.id}, this.bill).then(function(response){
-					self.$dispatch('change-info');
-					self.$router.go({name: 'bill-pay.list'});
-				})
-			}
-		},
-
-		getBill: function(index){
-			var self = this;
-			Bill.get({id:id}).then(function(response){
-				self.bills = response.data;
-			})
-		}
-},
-
-events:{
-	'new-bill' : function(bill){
-		self.bill = bill;
-	},
-}
-
+		submit: function() {
+			let self = this;
+            if (this.formType == 'insert') {
+            	Bill.save({}, this.bill).then(function(response) {
+            		self.$dispatch('change-info');
+            		self.$router.go({name: 'bill-pay.list'});
+            	});
+            } else {
+            	Bill.update({id: this.bill.id}, this.bill).then(function(response) {
+            		self.$dispatch('change-info');
+            		self.$router.go({name: 'bill-pay.list'});
+            	});
+            }
+        },
+        getBill: function(id) {
+        	let self = this;
+	        Bill.get({id: id}).then(function(response) {
+				self.bill = response.data;
+			});
+        }
+	}
 });

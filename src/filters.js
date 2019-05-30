@@ -1,16 +1,23 @@
-Vue.filter('doneLable', function(value){
-	if(value == 0){
-		return "NÃO PAGA"
-	}else{
-		return "PAGA"
-	}
+Vue.filter('doneLabel', function(value) {
+    if(value == 0) {
+        return "Não";
+    } else {
+        return "Sim";
+    }
 });
 
-Vue.filter('receivedLable', function(value){
-	if(value == 0){
-		return "NÃO RECEBIDO"
-	}else{
-		return "RECEBIDO"
-	}
-});
+Vue.filter('statusGeneral', function(value) {
+    if(value === false) {
+        return "Nenhuma conta cadastrada";
+    }
 
+    if(!value){
+        return "Nenhuma conta a pagar";
+    } else {
+        if (value > 1) {
+            return "Existem " + value + " contas ";        
+        } else {
+            return "Existe " + value + " conta ";
+        }                
+    }
+});

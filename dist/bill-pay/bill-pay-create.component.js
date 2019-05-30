@@ -1,33 +1,32 @@
 'use strict';
 
-window.billPayCreateComponent = Vue.extend({
-	template: '\n\t<!-- @submit \xE9 a abrevia\xE7\xE3o de v-on:submit-->\n\t<form name="form" @submit.prevent="submit" :form-type="formType">\n\t<label>Vencimento</label>\n\t<input type="text" v-model="bill.date_due">\n\t<br/><br/>\n\t<label>Nome</label>\n\t<select v-model="bill.name">\n\t<!-- :value \xE9 a abrevia\xE7\xE3o de v-bind:value-->\n\t<!-- value deixa de ser apnena propriedad do DOM e passa a ser uma propriedade de liga\xE7\xE3o-->\n\t<option v-for="o in names" :value="o">{{o}}</option>\n\t</select>\n\t<br/><br/>\n\t<label>Valor</label>\n\t<input type="text" v-model="bill.value">\n\t<br/><br/>\n\t<label>Paga?</label>\n\t<input type="checkbox" v-model="bill.done">\n\n\n\t<input type="submit" value="Enviar">\n\n\t</form>\n\t',
-	http: {
-		root: 'http://localhost:8000/api'
-	},
+var names = ['Conta de Luz', 'Conta de água', 'Conta de Internet', 'Conta de telefone', 'Conta de Condominio', 'Gasolina', 'Refeição', 'Supermercado'];
 
+window.billPayCreateComponent = Vue.extend({
+	template: '\n\t\t<form name="form" @submit.prevent="submit">\n\t\t\t<label>Vencimento:</label>\n\t\t\t<input type="text" v-model="bill.date_due">\n\t\t\t<br><br>\n\n\t\t\t<label>Nome:</label>\n\t\t\t<select v-model="bill.name">\n\t\t\t\t<option v-for="name in names" :value=" name">{{ name }}</option>\n\t\t\t</select>\n\t\t\t<br><br>\n\n\t\t\t<label>Valor:</label>\n\t\t\t<input type="text" v-model="bill.value">\n\t\t\t<br><br>\n\t\t\t\n\t\t\t<label>Pago?</label>\n\t\t\t<input type="checkbox" v-model="bill.done">\n\t\t\t<br><br>\n\n\t\t\t<input type="submit" value="Enviar">\n\t\t</form>\n\t',
 	data: function data() {
 		return {
-			formType: "insert",
-			names: ['Luz', 'agua', 'telefone', 'supermercado', 'cartao', 'emprestimo', 'gasolina'],
-			//limpar os dados form
-			bill: { date_due: '', name: '', value: 0, done: 0 }
+			formType: 'insert',
+			names: names,
+
+			bill: {
+				date_due: '',
+				name: '',
+				value: 0,
+				done: false
+			}
 		};
 	},
-
 	created: function created() {
-		var self = this;
-		if (this.$route.name == 'bill.update') {
-			self.formType = 'update';
-			self.getBill(this.$route.params.id);
+		if (this.$route.name == 'bill-pay.update') {
+			this.formType = 'update';
+			this.getBill(this.$route.params.id);
 		}
 	},
-
 	methods: {
-
 		submit: function submit() {
 			var self = this;
-			if (self.formType == "insert") {
+			if (this.formType == 'insert') {
 				Bill.save({}, this.bill).then(function (response) {
 					self.$dispatch('change-info');
 					self.$router.go({ name: 'bill-pay.list' });
@@ -39,19 +38,11 @@ window.billPayCreateComponent = Vue.extend({
 				});
 			}
 		},
-
-		getBill: function getBill(index) {
+		getBill: function getBill(id) {
 			var self = this;
 			Bill.get({ id: id }).then(function (response) {
-				self.bills = response.data;
+				self.bill = response.data;
 			});
 		}
-	},
-
-	events: {
-		'new-bill': function newBill(bill) {
-			self.bill = bill;
-		}
 	}
-
 });

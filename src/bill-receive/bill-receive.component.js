@@ -4,13 +4,12 @@
 		'menu-component': billReceiveMenuComponent
 	},
 	
-
 	template:
 		`
 		<h1>{{title}} </h1>
-		
-		<h3 :class="{'cinza': status == 'Nenhuma conta cadastrada'}"> {{ status }} </h3>
-		
+		<h3 :class="{'gray': status === false, 'green': status === 0, 'red' : status > 0}">
+		{{ status | statusGeneral }}
+		<h1>{{total}} </h1>
 		<menu-component></menu-component>
 		<router-view></router-view>
 		`,
@@ -19,23 +18,47 @@
 		
 		return {
 			title: "Contas a receber",
+			 status: false,
+			 total:0
 		};
 	},
 
-	computed: {
-		status: function(){
-			var bills = this.$root.$children[0].billsReceive;
-			
-			if(bills.length<=0){
-				return " Nenhuma conta cadastrada"
-			}
-			var count= 0;
-			for (var i in bills){
-				if(!bills[i].received){
-					count++;
-				}
-			}
-			return !count?"Nenhuma conta a receber" : "Existem "+ count+" contas a receber"
+	created: function() {
+		this.updateStatus();
+		this.updateTotal();
+	},
+	methods: {
+		calculateStatus: function(bills) {
+			if(!bills.length) {
+                this.status = false;
+            }
+
+            var count = 0;
+            for (var i in bills) {
+                if (!bills[i].done) {
+                    count++;
+                }                
+            }
+
+            this.status = count;
+		},
+		updateStatus: function() {
+			var self = this;
+			Receive.query().then(function(response) {
+				self.calculateStatus(response.data);
+			});
+		},
+		updateTotal: function() {
+			var self = this;
+			Receive.total().then(function(response) {
+				self.total = response.data.total;
+			});
+		}
+	},
+	events: {
+		'change-info': function() {
+			this.updateStatus();
+			this.updateTotal();
 		}
 	}
 });

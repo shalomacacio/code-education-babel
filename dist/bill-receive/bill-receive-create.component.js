@@ -9,7 +9,6 @@ window.billReceiveCreateComponent = Vue.extend({
 			bill: { date_due: '', name: '', value: 0, received: 0 }
 		};
 	},
-
 	created: function created() {
 		if (this.$route.name == 'bill-receive.update') {
 			this.formType = 'update';
@@ -17,23 +16,23 @@ window.billReceiveCreateComponent = Vue.extend({
 		}
 	},
 
-	methods: {
 
+	methods: {
 		submit: function submit() {
-			var self = this;
+			var _this = this;
+
 			if (this.formType == 'insert') {
 				Receive.save({}, this.bill).then(function (response) {
-					self.$dispatch('change-info');
-					self.$router.go({ name: 'bill-receive.list' });
+					_this.$dispatch('change-info');
+					_this.$router.go({ name: 'bill-receive.list' });
 				});
 			} else {
 				Receive.update({ id: this.bill.id }, this.bill).then(function (response) {
-					self.$dispatch('change-info');
-					self.$router.go({ name: 'bill-receive.list' });
+					_this.$dispatch('change-info');
+					_this.$router.go({ name: 'bill-receive.list' });
 				});
 			}
 		},
-
 		getBill: function getBill(id) {
 			Receive.get({ id: id }).then(function (response) {
 				self.receive = response.data;

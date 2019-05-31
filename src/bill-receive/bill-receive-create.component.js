@@ -17,7 +17,7 @@ window.billReceiveCreateComponent = Vue.extend({
 				<input type="submit" value="Enviar">
 			</form>
 		`,
-	data: function(){
+	data(){
 		return {
 			formType:"insert",
 			//limpar os dados form
@@ -25,7 +25,7 @@ window.billReceiveCreateComponent = Vue.extend({
 		};
 	},
 
-	created: function(){
+	created(){
 		if(this.$route.name == 'bill-receive.update'){
 			this.formType = 'update';
 			this.getBill(this.$route.params.id)
@@ -34,33 +34,31 @@ window.billReceiveCreateComponent = Vue.extend({
 
 	methods: {
 
-		submit: function(){
-			var self = this;
+		submit(){
             if (this.formType == 'insert') {
-            	Receive.save({}, this.bill).then(function(response) {
-            		self.$dispatch('change-info');
-            		self.$router.go({name: 'bill-receive.list'});
+            	Receive.save({}, this.bill).then((response) => {
+            		this.$dispatch('change-info');
+            		this.$router.go({name: 'bill-receive.list'});
             	});
             } else {
-            	Receive.update({id: this.bill.id}, this.bill).then(function(response) {
-            		self.$dispatch('change-info');
-            		self.$router.go({name: 'bill-receive.list'});
+            	Receive.update({id: this.bill.id}, this.bill).then((response)=> {
+            		this.$dispatch('change-info');
+            		this.$router.go({name: 'bill-receive.list'});
             	});
             }
 		},
 
-		getBill: function(id){
-			Receive.get({id: id}).then(function(response) {
+		getBill(id){
+			Receive.get({id: id}).then((response)=> {
 				self.receive = response.data;
 			})
 		}
 	},
 
 	events:{
-		'new-bill' : function(bill){
+		'new-bill'(bill){
 			this.bill = bill;
 		},
 	}
 	
 });
-

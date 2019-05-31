@@ -16,11 +16,11 @@ window.billReceiveComponent = Vue.extend({
 			total: 0
 		};
 	},
-
 	created: function created() {
 		this.updateStatus();
 		this.updateTotal();
 	},
+
 	methods: {
 		calculateStatus: function calculateStatus(bills) {
 			if (!bills.length) {
@@ -37,15 +37,17 @@ window.billReceiveComponent = Vue.extend({
 			this.status = count;
 		},
 		updateStatus: function updateStatus() {
-			var self = this;
+			var _this = this;
+
 			Receive.query().then(function (response) {
-				self.calculateStatus(response.data);
+				_this.calculateStatus(response.data);
 			});
 		},
 		updateTotal: function updateTotal() {
-			var self = this;
+			var _this2 = this;
+
 			Receive.total().then(function (response) {
-				self.total = response.data.total;
+				_this2.total = response.data.total;
 			});
 		}
 	},

@@ -6,21 +6,21 @@ window.dashboardComponent = Vue.extend({
 	 <h3>Despesas: {{totalPay | currency "R$ " 2}}<h3>
 	`,
 
-	data: function() {
+	data() {
 		return {
 			bills: [],
 			totalPay:0,
 			totalReceive:0
 		};
 	},
-	created: function() {
+	created() {
 		this.updateTotalPay();
 		this.updateTotalReceive();
 	},
 
 	methods: {
 
-		updateTotalPay: function() {
+		updateTotalPay() {
 			var self = this;
 			Bill.total().then(function(response) {
 				self.totalPay = response.data.total;
@@ -28,7 +28,7 @@ window.dashboardComponent = Vue.extend({
 
 		},
 
-		updateTotalReceive: function() {
+		updateTotalReceive() {
 			var self = this;
 			Receive.total().then(function(response) {
 				self.totalReceive = response.data.total;

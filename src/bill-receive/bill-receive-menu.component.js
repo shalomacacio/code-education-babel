@@ -11,7 +11,7 @@ window.billReceiveMenuComponent = Vue.extend({
 			</ul>
 		</nav>
 		`,
-	data: function(){
+	data(){
 
 		return {
 			menus:

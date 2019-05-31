@@ -13,18 +13,16 @@ window.dashboardComponent = Vue.extend({
 	created: function created() {
 		this.updateTotalPay();
 		this.updateTotalReceive();
-		//alert("Bem Vindo");
 	},
 
-	methods: {
 
+	methods: {
 		updateTotalPay: function updateTotalPay() {
 			var self = this;
 			Bill.total().then(function (response) {
 				self.totalPay = response.data.total;
 			});
 		},
-
 		updateTotalReceive: function updateTotalReceive() {
 			var self = this;
 			Receive.total().then(function (response) {

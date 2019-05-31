@@ -25,7 +25,7 @@ window.billPayListComponent = Vue.extend({
 					<td>{{ index + 1 }}</td>
 					<td>{{ bill.date_due }}</td>
 					<td>{{ bill.name }}</td>
-					<td>{{ bill.value | currency 'R$ ' 2}}</td>
+					<td>{{ bill.value | numberFormat }}</td>
 					<td :class="{'pago': bill.done, 'nao-pago': !bill.done}">
 						{{ bill.done | doneLabel }}
 					</td>
@@ -37,24 +37,23 @@ window.billPayListComponent = Vue.extend({
 			</tbody>
 		</table>
 	`,
-	data: function() {
+	data() {
 		return {
 			bills: []
 		};
 	},
-	created: function() {
-		let self = this;
-		Bill.query().then(function(response) {
-			self.bills = response.data;
+	created() {
+	
+		Bill.query().then((response)=> {
+			this.bills = response.data;
 		});
 	},
 	methods: {
-        removeBill : function(bill) {
+        removeBill(bill) {
             if (confirm('Deseja excluir esta conta?')) {
-            	let self = this;
-            	Bill.delete({id: bill.id}).then(function(response) {
-            		self.bills.$remove(bill);
-            		self.$dispatch('change-info');
+            	Bill.delete({id: bill.id}).then((response) => {
+            		this.bills.$remove(bill);
+            		this.$dispatch('change-info');
             	});                
             }            
         }

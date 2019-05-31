@@ -8,11 +8,13 @@ window.billReceiveListComponent = Vue.extend({
 		};
 	},
 	created: function created() {
-		var self = this;
+		var _this = this;
+
 		Receive.query().then(function (response) {
-			self.receives = response.data;
+			_this.receives = response.data;
 		});
 	},
+
 	methods: {
 		removeBill: function removeBill(receive) {
 			if (confirm('Deseja excluir esta conta?')) {

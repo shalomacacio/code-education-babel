@@ -35,22 +35,21 @@ window.billReceiveListComponent = Vue.extend({
 			</tbody>
 		</table>
 		`,
-	data: function() {
+	data() {
 		return {
 			receives: []
 		};
 	},
-	created: function() {
-		var self = this;
-		Receive.query().then(function(response) {
-			self.receives = response.data;
+	created() {
+		Receive.query().then((response) => {
+			this.receives = response.data;
 		});
 	},
 	methods: {
-        removeBill : function(receive) {
+        removeBill(receive) {
             if (confirm('Deseja excluir esta conta?')) {
             	var self = this;
-            	Receive.delete({id: bill.id}).then(function(response) {
+            	Receive.delete({id: bill.id}).then((response)=> {
             		self.receives.$remove(bill);
             		self.$dispatch('change-info');
             	});                
